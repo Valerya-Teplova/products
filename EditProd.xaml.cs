@@ -42,7 +42,7 @@ namespace products
         public EditProd(Products product)
         {
             InitializeComponent();
-           
+            products = product;
             DataContext = products;           
             categCmB.ItemsSource = DBClass.GetContext().Category.ToList();
             UpdateIngredientList();

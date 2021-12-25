@@ -15,7 +15,7 @@ namespace products
         {
            try
             {
-                string path = Path.GetFullPath(((string)value).Remove(0, 1));
+                string path = Path.GetFullPath(((string)value));
                 return File.Exists(path) ? path : "Resource/Image/picture.png";
             } catch(Exception)
             {

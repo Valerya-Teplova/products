@@ -19,7 +19,7 @@ namespace products
     /// </summary>
     public partial class AddProd : Window
     {
-        private Products product;
+        
         public AddProd( Products product)
         {
             InitializeComponent();
@@ -37,7 +37,54 @@ namespace products
 
         private void AddBut_Click(object sender, RoutedEventArgs e)
         {
+            StringBuilder error = new StringBuilder();
 
+            if (prNameTB.SelectedText == null)
+                error.AppendLine("Вы не заполнили Наименование продукта");
+            if (catCmB.SelectedItem == null)
+                error.AppendLine("Вы не выбрали категорию продукта");
+            if (desTB.SelectedText == null)
+                error.AppendLine("Вы не вели Описание продукта");
+            if (weightTB.SelectedText == null)
+                error.AppendLine("Вы не вели вес продукта");
+            if (priceTB.SelectedText == null)
+                error.AppendLine("Вы не указали стоимость продукта");
+            if (ingredCmB.SelectedItem == null)
+               error.AppendLine("Вы не выбрали ингредиент");
+
+            if (error.Length > 0)
+            {
+                MessageBox.Show(error.ToString());
+                return;
+            }
+            Products products = new Products()
+            {
+                TitleProd = prNameTB.Text,
+                Description = descrTxB.Text,
+                Weigth = double.Parse(weightTB.Text),
+                Price = double.Parse(priceTB.Text),
+                Image = null,
+                Category = catCmB.SelectedItem as Category
+            };
+            DBClass.GetContext().Products.Add(products);
+            ProductsIngredient productsIngredient = new ProductsIngredient()
+            {
+                Products = products,
+                Ingredient = ingredCmB.SelectedItem as Ingredient
+            };
+            DBClass.GetContext().ProductsIngredient.Add(productsIngredient);
+
+
+            DBClass.GetContext().SaveChanges();
+            DBClass.ApplyDataBaseChange();
+            MessageBox.Show("Продукт успешно добавлен");
+            Close();
+        }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
     }
 }
